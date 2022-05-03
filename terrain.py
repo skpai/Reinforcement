@@ -12,6 +12,9 @@ class Terrain:
         self.x = np.linspace(-self.x_max, self.x_max, self.pts_nb)
         self.y = np.linspace(-self.y_max, self.y_max, self.pts_nb)
 
+    def __str__(self):
+        return f""
+
     def init_terrain_reward(self):
         xs, ys = np.meshgrid(self.x, self.y, sparse=True)
         if self.distrib == "circle":
@@ -19,8 +22,7 @@ class Terrain:
         return zs
 
     def get_all_points(self):
-        return np.array([zip(val_x, self.y[i]) for i, val_x in enumerate(self.x)])
-
+        return np.array([(val_x, self.y[i]) for i, val_x in enumerate(self.x)])
 
     def get_terrain_reward(self, x_ask, y_ask):
         # get reward value at given position x_ask and y_ask
@@ -30,14 +32,20 @@ class Terrain:
             )
         return rwd
 
-    def plot_terrain(self, zs):
 
-        h = plt.contourf(x, y, zs)
+"""     def plot_terrain(self, zs):
+        h = plt.contourf(self.x, self.y, zs)
         plt.axis("scaled")
         plt.colorbar()
-        plt.show()
+        plt.show() """
 
 
 def main():
     terrain = Terrain()
-    print()
+    # print(terrain.get_terrain_reward)
+    z = terrain.init_terrain_reward()
+    terrain.plot_terrain(z)
+
+
+if __name__ == "__main__":
+    main()

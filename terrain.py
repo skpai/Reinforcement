@@ -13,6 +13,9 @@ class Terrain:
         self.x = np.linspace(-self.x_max, self.x_max, self.pts_nb)
         self.y = np.linspace(-self.y_max, self.y_max, self.pts_nb)
 
+    def __str__(self):
+        return f""
+
     def init_terrain_reward(self):
         xs, ys = np.meshgrid(self.x, self.y, sparse=True)
         if self.distrib == "circle":
@@ -32,12 +35,12 @@ class Terrain:
             )
         return rwd
 
-    def plot_terrain(self, zs):
 
-        h = plt.contourf(x, y, zs)
+"""     def plot_terrain(self, zs):
+        h = plt.contourf(self.x, self.y, zs)
         plt.axis("scaled")
         plt.colorbar()
-        plt.show()
+        plt.show() """
 
 
 def main():

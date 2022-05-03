@@ -18,6 +18,10 @@ class Terrain:
             zs = np.sqrt(self.x_max**2 + self.y_max**2) - np.sqrt(xs**2 + ys**2)
         return zs
 
+    def get_all_points(self):
+        return np.array([zip(val_x, self.y[i]) for i, val_x in enumerate(self.x)])
+
+
     def get_terrain_reward(self, x_ask, y_ask):
         # get reward value at given position x_ask and y_ask
         if self.distrib == "circle":

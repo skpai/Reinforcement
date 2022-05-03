@@ -1,3 +1,4 @@
+from re import M
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -19,7 +20,8 @@ class Terrain:
         return zs
 
     def get_all_points(self):
-        return np.array([zip(val_x, self.y[i]) for i, val_x in enumerate(self.x)])
+        return [(x,y) for x in self.x for y in self.y]
+        
 
 
     def get_terrain_reward(self, x_ask, y_ask):
@@ -40,4 +42,8 @@ class Terrain:
 
 def main():
     terrain = Terrain()
-    print()
+
+    
+
+if __name__ == "__main__":
+    main()

@@ -5,7 +5,7 @@ import random
 
 class Agent:
     "Returns the agent class"
-    def __init__(self, terrain,reward=0,  current_position=(0,0), position_seen=[], number_of_actions=0, action_limit=100, epsilon=0.2):
+    def __init__(self, terrain,reward=0,  current_position=(0,0), position_seen=[], number_of_actions=0, action_limit=100, epsilon=0.1):
         self.terrain = terrain
         self.reward = reward
         self.number_of_actions = number_of_actions
@@ -26,21 +26,27 @@ class Agent:
     
     
     def exploit(self, x, y):
-        x_new, y_new= x*random.choice(list(np.linspace(-0.3, 0.3, 10))), y*random.choice(list(np.linspace(-0.3)))
-        self.current_position=x_new, y_new
+        x_new= x*random.choice(list(np.linspace(-0.3, 0.3, 10)))
+        y_new= y*random.choice(list(np.linspace(-0.3, 0.3, 10)))
+        if self.terrain.get_terrain_reward(x_new, y_new)>self.reward:
+            self.current_position=x_new, y_new
+            self.reward=self.terrain.get_terrain_reward(x_new, y_new)
     def explore(self, x, y):
         x_new, y_new=self.get_random_position()
-        
-
-    
+        if self.terrain.get_terrain_reward(x_new, y_new)>self.reward:
+            self.current_position=x_new, y_new
+            self.reward=self.terrain.get_terrain_reward(x_new, y_new)
 
 
 
     def next_action(self, x, y):
         current_reward=self.terrain.get_terrain_reward(x, y)
-        if current_reward>self.reward:
-            self.reward =current_reward
-            self.current_position=(x, y)
+        if (current_reward-self.reward)/current_reward>self.epsilon:
+            x, y= self.current_position
+            self.explore(x, y)
+        else:
+            x, y= self.current_position
+            self.exploit(x, y)
         self.number_of_actions+=1
 
         print(self.number_of_actions, self.reward, self.current_position)
@@ -60,7 +66,7 @@ class Agent:
     def play_trials(self):
         self.initialize_agent()
         while self.number_of_actions<self.action_limit:            
-            x, y = self.get_random_position()
+            x, y = self.current_position
             self.next_action(x, y)
 
     

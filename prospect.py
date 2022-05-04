@@ -1,6 +1,5 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from sympy import re
 from terrain import *
 import random
 from visualizer import *
@@ -50,6 +49,13 @@ class Agent:
         self.current_position = x_new, y_new
         self.reward = self.terrain.get_terrain_reward(x_new, y_new)
         self.record_all("exploit")
+    def softmax(self, tau=0.5):
+        df=self.record_df
+        df['probability']=df.reward.apply(lambda x:np.exp(x))
+        df['probability']=df['probability']/df['probability'].cumsum()
+
+
+    
 
     def explore(self, x, y):
         x_new, y_new = self.get_random_position()
@@ -74,6 +80,8 @@ class Agent:
         elif self.policy == "softmax":
             if len(self.record_df) < self.number_of_actions / 3:
                 self.explore(x, y)
+            else:
+                pass
         elif self.policy == "greedy":
             self.exploit(x, y)
         elif self.policy == "random":

@@ -55,6 +55,9 @@ class Agent:
         self.current_position = x_new, y_new
         self.reward = self.terrain.get_terrain_reward(x_new, y_new)
         self.record_all("exploit")
+
+    def sarsa(self, epsilon = 0.9, total_episodes = 10000, max_steps = 100, alpha = 0.85, gamma = 0.95):
+        pass
     
     @staticmethod
     def check_valid(position1, position2):
@@ -97,7 +100,6 @@ class Agent:
         #         self.current_position = x_new, y_new
         self.current_position = x_new, y_new
         self.reward = self.maze.reward_matrix[x_new, y_new]
-        print(self.reward)
         self.record_all("explore")
 
     def next_action(self, x, y):
@@ -125,7 +127,6 @@ class Agent:
             self.explore(x, y)
         self.number_of_actions += 1
 
-        print(self.number_of_actions, self.reward, self.current_position)
 
     def record_all(self, type):
         self.record_df.loc[len(self.record_df)] = [
@@ -165,9 +166,12 @@ class Agent:
         # plt.show()
         df = self.record_df
         df["cumulative"] = df.reward.expanding().mean()
-        df.reward.cumsum().plot()
+        df["cumsum"] =df.reward.cumsum()
         #df.reward.plot()
-        plt.show()
+        #plt.show()
+        return df
+
+
 
 
 def main():

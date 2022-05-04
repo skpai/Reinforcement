@@ -2,11 +2,31 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 class Maze:
-    def __init__(self, rows=5, cols=5, pts_nb=51, distrib="circle"):
+    def __init__(self, rows=5, cols=5, target_positions=None, start_pos=None):
     # initialize the variables
-    self.x_max = x_max
-    self.y_max = y_max
-    self.pts_nb = pts_nb
-    self.distrib = distrib
-    self.x = np.linspace(-self.x_max, self.x_max, self.pts_nb)
-    self.y = np.linspace(-self.y_max, self.y_max, self.pts_nb)
+        self.rows = rows
+        self.cols = cols
+        self.target_positions = target_positions
+        self.start_pos = start_pos
+        self.reward_matrix = -1+np.zeros(self.rows, self.cols)
+        if target_positions:
+            for position in target_positions:
+                self.reward_matrix[position] = 100
+    
+    def check_start_pos(self):
+        return self.start_pos not in self.target_positions  
+    
+
+def main():
+    maze = Maze(rows=5, cols=5, target_positions=[(0,0), (4,3)])
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+            
+
+

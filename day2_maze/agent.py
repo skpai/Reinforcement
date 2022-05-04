@@ -82,18 +82,20 @@ class Agent:
     def explore(self, x, y):
 
         valid_positions= self.get_valid_positions()
+        x_new, y_new = random.choice(valid_positions)
 
-        for position in valid_positions:
-            x_new, y_new = position
-            print(x_new, y_new)
-            reward=self.maze.reward_matrix[x_new, y_new]
-            if reward>1:
-                self.current_position = x_new, y_new
-                self.reward = self.maze.reward_matrix[x_new, y_new]
-                print("*******solution found*********")
-                break
-            else:        
-                self.current_position = x_new, y_new
+        # for position in valid_positions:
+        #     x_new, y_new = position
+        #     print(x_new, y_new)
+        #     reward=self.maze.reward_matrix[x_new, y_new]
+        #     if reward>1:
+        #         self.current_position = x_new, y_new
+        #         self.reward = self.maze.reward_matrix[x_new, y_new]
+        #         print("*******solution found*********")
+        #         break
+        #     else:        
+        #         self.current_position = x_new, y_new
+        self.current_position = x_new, y_new
         self.reward = self.maze.reward_matrix[x_new, y_new]
         print(self.reward)
         self.record_all("explore")
@@ -162,9 +164,9 @@ class Agent:
         # )
         # plt.show()
         df = self.record_df
-        #df["cumulative"] = df.reward.expanding().mean()
-        #df.cumulative.plot()
-        df.reward.plot()
+        df["cumulative"] = df.reward.expanding().mean()
+        df.reward.cumsum().plot()
+        #df.reward.plot()
         plt.show()
 
 

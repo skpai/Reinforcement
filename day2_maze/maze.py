@@ -14,7 +14,9 @@ class Maze:
                 self.reward_matrix[position] = 100
     
     def check_start_pos(self):
-        return self.start_pos not in self.target_positions  
+        return self.start_pos not in self.target_positions
+    def get_all_points(self):
+        return [(i,j) for i in range(self.rows) for j in range(self.cols)]  
 
     def plot_maze(self):
         plt.imshow(self.reward_matrix)

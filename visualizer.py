@@ -1,22 +1,26 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from prospect import *
 
 
 class Visualizer:
-    def __init__(self):
-        # self.x_i = x_i
-        # self.y_i = y_i
-        # self.rwd = rwd
+    def __init__(self, x, y, reward):
         # self.steps = steps
-        self.agent = agent
+        self.x = x
+        self.y = y
+        self.reward = reward
 
     def plot_terrain(self):
-        plt.scatter(self.x_i, self.y_i, s=self.rwd_i)
+        x, y=self.x, self.y
+        reward=self.reward
+
+        plt.scatter(x, y, s=reward)
         plt.set_xlabel("x")
         plt.set_ylabel("y")
+        plt.show()
 
     def plot_cumulative_rwd(self):
-        cdf = np.cumsum(self.rwd)
+        cdf = np.cumsum(self.reward)
         plt.plot(self.steps, cdf)
 
     def plot_dashboard(self):
@@ -44,6 +48,10 @@ class Visualizer:
 
             plt.close(fig)
             return fig
+
+def main():
+    pass
+
 
 
 if __name__ == "__main__":

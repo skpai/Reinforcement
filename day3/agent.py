@@ -7,6 +7,7 @@ from time import *
 from visualizer import *
 
 
+
 class Agent:
     def __init__(self, maze, epsilon, gamma, alpha, 
                  state, q_table, actions=['up', 'down', 'left', 'right']):
@@ -35,6 +36,7 @@ class Agent:
             q_target = reward + self.gamma * self.q_table[nxt_state][action]
         self.q_table[self.state][action] += self.alpha * (q_target - q_predict) 
         self.state = nxt_state
+
 
 
 def path(state, is_terminated):
@@ -72,14 +74,15 @@ def play():
             nxt_state, reward = maze.env_feedback(state=agent.state, action=action)
             if agent.state == nxt_state: 
                 reward = -10
-            ###########################################
             agent.update_q_table(reward=reward, action=action, nxt_state=nxt_state)
             
             if nxt_state in ['win']:
                 is_terminated = True
             path(agent.state, is_terminated)
-            animate(agent.state, maze.map, ax)
-
+            try:
+                animate(agent.state, maze.map, ax)
+            except:
+                pass
             agent.state = nxt_state
             count +=1
             return nxt_state
@@ -123,8 +126,12 @@ def main():
             if nxt_state in ['win']:
                 is_terminated = True
                 nxt_state = (0,0)
+
             path(agent.state, is_terminated)
-            animate(agent.state, maze.map, ax)
+            try:
+                animate(agent.state, maze.map, ax)
+            except:
+                pass
             agent.state = nxt_state
             count +=1
             #time.sleep(0.05)

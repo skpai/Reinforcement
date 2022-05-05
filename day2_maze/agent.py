@@ -82,6 +82,19 @@ class Agent:
         valid_positions=[point for point in valid if point in self.maze.get_all_points()]
         return valid_positions  
 
+    def qlearning_method(self, epsilon=0.9, alpha=0.1, gamma=0.9):
+        valid_positions= self.get_valid_positions()
+        rewards=[self.maze.reward_matrix[x, y] for x,y in valid_positions]
+        q_table=[valid_positions, rewards]
+
+        if random.uniform(0, 1) < epsilon:
+            x_new, y_new = random.choice(valid_positions)
+        else:
+            index = np.argmax(q_table[valid_positions]) 
+        
+
+        pass
+
     def explore(self, x, y):
 
         valid_positions= self.get_valid_positions()

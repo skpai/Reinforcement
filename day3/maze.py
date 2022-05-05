@@ -2,8 +2,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 class Maze:
-    def __init__(self, actions):
+    def __init__(self, actions, start_point=(0,0)):
         self.actions = actions
+        self.start_point = start_point
         
     def build_map(self, size, target, t_reward):
         self.size = size
@@ -37,6 +38,24 @@ class Maze:
         if next_state not in self.all_positions:
             next_state=state
         return next_state
+    def get_movables(self, state):
+        action1 = (state[0] - 1, state[1])
+        action2 = (state[0] + 1, state[1])
+        action3 = (state[0], state[1] + 1)
+        action4 = (state[0], state[1] - 1)
+        actions=[action1, action2, action3, action4]
+        movables=[action for action in actions if action in self.all_positions] 
+        return movables
+
+    def get_val(self, state):
+        y, x = state
+        if state == self.start_point: return 0, False
+        else:
+            v = float(self.map[y][x])
+            if state in self.target: 
+                return v, True
+            else: 
+                return v, False
     
     def plot_maze_new(self):
         plt.pcolor(self.map, edgecolors='w', linewidths=2)

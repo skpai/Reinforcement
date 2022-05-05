@@ -97,7 +97,7 @@ def main():
     ACTIONS = ['up', 'down', 'left', 'right']
     initSTATE = (0,0)
     SIZE = (5,5) # maze size
-    episodes = 20000
+    episodes = 2000
 
     # number of times to sample the combination of state, action and reward
     times = 1000
@@ -124,7 +124,7 @@ def main():
             next_movables = maze.get_movables(next_state)
             nnsolver.remember_memory(state, action, reward, next_state, next_movables, done)
             if done or time == (times - 1):
-                if e % 500 == 0:
+                if e % 10 == 0:
                     print(f"episode: {e}/{episodes}, score: {score}, e: {nnsolver.epsilon:.2} at {time}")
 
                 break

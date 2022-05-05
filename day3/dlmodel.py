@@ -51,28 +51,28 @@ class Experience(object):
 ############################################################################################
 
 
-def play_game(model, qmaze, rat_cell):
-    qmaze.reset(rat_cell)
-    envstate = qmaze.observe()
-    while True:
-        prev_envstate = envstate
-        # get next action
-        q = model.predict(prev_envstate)
-        action = np.argmax(q[0])
+# def play_game(model, agent, rat_cell):
+#     agent.reset(rat_cell)
+#     envstate = agent.observe()
+#     while True:
+#         prev_envstate = envstate
+#         # get next action
+#         q = model.predict(prev_envstate)
+#         action = np.argmax(q[0])
 
-        # apply action, get rewards and new state
-        envstate, reward, game_status = qmaze.act(action)
-        if game_status == 'win':
-            return True
-        elif game_status == 'lose':
+#         # apply action, get rewards and new state
+#         envstate, reward, game_status = agent.act(action)
+#         if game_status == 'win':
+#             return True
+#         elif game_status == 'lose':
+#             return False
+
+
+def completion_check(model, agent):
+    for cell in agent.free_cells:
+        if not agent.valid_actions(cell):
             return False
-
-
-def completion_check(model, qmaze):
-    for cell in qmaze.free_cells:
-        if not qmaze.valid_actions(cell):
-            return False
-        if not play_game(model, qmaze, cell):
+        if not play_game(model, agent, cell):
             return False
     return True
 
@@ -85,22 +85,22 @@ def qtrain(model, maze, max_memory=1000, data_size=50,n_epoch=10000):
 
     win_history = []   # history of win/lose game
     n_free_cells = maze.get
-    hsize = qmaze.maze.size//2   # history window size
+    hsize = agent.maze.size//2   # history window size
     win_rate = 0.0
     imctr = 1
 
     for epoch in range(n_epoch):
         loss = 0.0
-        rat_cell = random.choice(qmaze.free_cells)
-        qmaze.reset(rat_cell)
+        rat_cell = random.choice(agent.free_cells)
+        agent.reset(rat_cell)
         game_over = False
 
         # get initial envstate (1d flattened canvas)
-        envstate = qmaze.observe()
+        envstate = agent.observe()
 
         n_episodes = 0
         while not game_over:
-            valid_actions = qmaze.valid_actions()
+            valid_actions = agent.valid_actions()
             if not valid_actions: break
             prev_envstate = envstate
             # Get next action
@@ -110,7 +110,7 @@ def qtrain(model, maze, max_memory=1000, data_size=50,n_epoch=10000):
                 action = np.argmax(experience.predict(prev_envstate))
 
             # Apply action, get reward and new envstate
-            envstate, reward, game_status = qmaze.act(action)
+            envstate, reward, game_status = agent.act(action)
             if game_status == 'win':
                 win_history.append(1)
                 game_over = True
@@ -146,7 +146,7 @@ def qtrain(model, maze, max_memory=1000, data_size=50,n_epoch=10000):
         # # we simply check if training has exhausted all free cells and if in all
         # # cases the agent won
         if win_rate > 0.9 : epsilon = 0.05
-        if sum(win_history[-hsize:]) == hsize and completion_check(model, qmaze):
+        if sum(win_history[-hsize:]) == hsize and completion_check(model, agent):
             print("Reached 100%% win rate at epoch: %d" % (epoch,))
             break
 
@@ -167,7 +167,7 @@ def qtrain(model, maze, max_memory=1000, data_size=50,n_epoch=10000):
 # This is a small utility for printing readable time strings:
 
 
-def build_model(maze, lr=0.001):
+def build_model(maze, lr=0.001,num_actions=4):
     model = Sequential()
     model.add(Dense(maze.size, input_shape=(maze.size,)))
     model.add(ReLU())
